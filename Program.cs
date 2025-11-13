@@ -6,7 +6,7 @@ class Program
 {
     static void Main()
     {
-        List<Student> studentsInfo = new List<Student>();
+        List<Student> studentsInfo = LoadStudents();
         string file = "students.json";
 
         if (File.Exists(file))
@@ -30,27 +30,29 @@ class Program
             switch (choice)
             {
                 case "1":
-                    // TODO: Add student
+                    AddStudent(studentsInfo);
                     break;
                 case "2":
-                    // TODO: View students
+                    ViewStudent(studentsInfo);
                     break;
                 case "3":
-                    // TODO: Update student
+                    UpdateStudent(studentsInfo);
                     break;
                 case "4":
-                    // TODO: Delete student
+                    DeleteStudent(studentsInfo);
                     break;
                 case "5":
                     Console.WriteLine("Save and Exit");
+                    SaveStudents(studentsInfo);
                     return;
                 default:
                     Console.WriteLine("Invalid choice. Try again.");
                     break;
             }
         }
+    }
 
-         static void AddStudent(List<Student> studentsInfo)
+    static void AddStudent(List<Student> studentsInfo)
     {
         Console.Write("\nEnter index number: ");
         string indexNumber = Console.ReadLine();
@@ -60,22 +62,143 @@ class Program
 
         Console.Write("Enter age: ");
         int age = Convert.ToInt32(Console.ReadLine());
-        
+
         Console.Write("Enter email: ");
         string email = Console.ReadLine();
-        
+
         Console.Write("Enter course: ");
         string course = Console.ReadLine();
-        
 
 
-        Student student = new Student(indexNumber, name , age, email, course);
+
+        Student student = new Student(indexNumber, name, age, email, course);
         studentsInfo.Add(student);
 
         Console.WriteLine("\n✅ Student added successfully!\n");
     }
 
+    static void ViewStudent(List<Student> studentsInfo)
+    {
+        Console.WriteLine("\n===STUDENTS===");
+        if (studentsInfo.Count == 0)
+        {
+            Console.WriteLine("No information available!\n");
+            return;
+        }
 
-
+        for (int i = 0; i < studentsInfo.Count; i++)
+        {
+            Console.WriteLine($"{i + 1}. Index Number: {studentsInfo[i].IndexNumber}, Name: {studentsInfo[i].Name}, Age: {studentsInfo[i].Age}, Email: {studentsInfo[i].Email}, Course: {studentsInfo[i].Course}");
+        }
+        Console.WriteLine();
     }
+
+    static void UpdateStudent(List<Student> studentsInfo)
+    {
+        Console.Write("What are you searching for: ");
+        string searchedStudent = Console.ReadLine().ToLower();
+
+        bool found = false;
+
+        foreach (var student in studentsInfo)
+        {
+            if (student.Name.ToLower().Contains(searchedStudent) ||
+                student.Email.ToLower().Contains(searchedStudent) ||
+                student.IndexNumber.ToLower().Contains(searchedStudent) ||
+                student.Course.ToLower().Contains(searchedStudent))
+            {
+                Console.WriteLine($"\nFound: Index Number: {student.IndexNumber}, Name: {student.Name}, Age: {student.Age}, Email: {student.Email}, Course: {student.Course}");
+                found = true;
+
+                Console.WriteLine("\nType in the changes: ");
+
+                Console.Write("Enter new index number: ");
+                student.IndexNumber = Console.ReadLine();
+
+                Console.Write("Enter new name: ");
+                student.Name = Console.ReadLine();
+
+                Console.Write("Enter new age: ");
+                student.Age = Convert.ToInt32(Console.ReadLine());
+
+                Console.Write("Enter new email: ");
+                student.Email = Console.ReadLine();
+
+                Console.Write("Enter new course: ");
+                student.Course = Console.ReadLine();
+
+                Console.WriteLine("\n✅ Updated successfully!\n");
+                break;
+            }
+        }
+
+        if (!found)
+        {
+            Console.WriteLine("\n❌ Student not found!\n");
+        }
+    }
+
+    static void DeleteStudent(List<Student> studentsInfo)
+    {
+        if (studentsInfo.Count == 0)
+        {
+            Console.WriteLine("\nNo students to delete.\n");
+            return;
+        }
+
+        ViewStudent(studentsInfo);
+
+        Console.Write("\nEnter the Index Number of the student to delete: ");
+        string indexToDelete = Console.ReadLine();
+
+        Student studentToRemove = studentsInfo.Find(s => s.IndexNumber.Equals(indexToDelete, StringComparison.OrdinalIgnoreCase));
+
+        if (studentToRemove != null)
+        {
+            studentsInfo.Remove(studentToRemove);
+            Console.WriteLine("\n🗑️  Student deleted successfully!\n");
+        }
+        else
+        {
+            Console.WriteLine("\n❌ No student found with that Index Number.\n");
+        }
+    }
+
+    static List<Student> LoadStudents()
+    {
+        List<Student> studentsInfo = new List<Student>();
+        string file = "students.json";
+
+    if (File.Exists(file))
+{
+    string json = File.ReadAllText(file);
+   
 }
+
+
+        if (File.Exists(file))
+        {
+            string json = File.ReadAllText(file);
+            studentsInfo = JsonSerializer.Deserialize<List<Student>>(json);
+
+            Console.WriteLine("\n📂 Students loaded successfully!\n");
+        }
+        else
+        {
+            Console.WriteLine("\nNo saved students found.\n");
+        }
+
+        return studentsInfo;
+    }
+
+static void SaveStudents(List<Student> studentsInfo)
+{
+    string json = JsonSerializer.Serialize(studentsInfo, new JsonSerializerOptions { WriteIndented = true });
+    File.WriteAllText("students.json", json);
+    Console.WriteLine("\n💾 Students saved successfully!\n");
+}
+
+
+
+}
+    
