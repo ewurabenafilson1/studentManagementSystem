@@ -1,0 +1,23 @@
+[
+  {
+    "IndexNumber": "UMAT/001",
+    "Name": "EMMANUELLA EWURA ABENA FILSON",
+    "Age": 23,
+    "Email": "google@gmail.com",
+    "Course": "computer science"
+  },
+  {
+    "IndexNumber": "UMAT/002",
+    "Name": "ADOM ADDO",
+    "Age": 4,
+    "Email": "google@gmail.com ",
+    "Course": "computer science"
+  },
+  {
+    "IndexNumber": "UMAT/003",
+    "Name": "AGYEI ABOWA",
+    "Age": 32,
+    "Email": "google@gmail.com ",
+    "Course": "COMPUTER SCIENCE"
+  }
+]
